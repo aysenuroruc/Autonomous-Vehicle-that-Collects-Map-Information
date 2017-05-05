@@ -1,7 +1,7 @@
  /* Otonom olarak bir odanın krokisini çıkaran Ardıno Kodu */
 
-  const int trigPinFront = 7;   /*1.Sensörün trig pini Arduino'nun 6 numaralı bacağına bağlanılacak. */
-  const int echoPinFront = 8;   /*1.Sensörün echo pini Arduinonun 7 numaralı bacağına bağlanır.      */
+  const int trigPinFront = 7;   /* The 1st sensor will be linked to the 6th leg of Arduino trigpini.  */
+  const int echoPinFront = 8;   /* The echo pin of the 1st sensor is connected to Arduino's No. 7 foot.  */
 
   const int trigPinRight = 10;
   const int echoPinRight = 11;
@@ -10,9 +10,9 @@
   const int echoPinLeft = 4;
   
   int echoPin;
-  int TurnSpeed = 150;     /* Bu değişken ile motorların dönme hızı kontrol edilebilir.*/
+  int TurnSpeed = 150;     /* With this variable, the speed of rotation of the motors can be controlled.*/
   
-  int TurnTime = 250;  /*DonmeZamani değişkeni robotun 90 Derece dönmesini sağlayan değişkendir.Robotun yaklaşık 90 derece dönmesi için yaklaşık olarak böyle bir süre tayin ettik. */
+  int TurnTime = 250;  /*It is a variable that allows the rotation of a Donmatian variant of a robot to rotate 90 degrees. We have set the approximate time for turning the robot about 90 degrees. */
 
   const int rightback = 5;
   const int rightforward = 3;
@@ -28,14 +28,14 @@
   {
   long timeL;
   long distanceL;
-  digitalWrite(trigPinLeft, LOW); /*Sensör set the LOW state. */
+  digitalWrite(trigPinLeft, LOW);       /*Sensör set the LOW state. */
   delayMicroseconds(5);
-  digitalWrite(trigPinLeft, HIGH); /*Sensöre ses dalgasını üretmesi için emir veriyoruz. */
+  digitalWrite(trigPinLeft, HIGH);      /* We order to produce a sensory sound wave. */
   delayMicroseconds(10);
-  digitalWrite(trigPinLeft, LOW); /*yeni dalgaların üretilmemesi için trig pini LOW yapılıyor. */
+  digitalWrite(trigPinLeft, LOW);       /*The trig pini LOW is made so that new waves are not produced. */
   
-  timeL = pulseIn(echoPin, HIGH, 11600); /* Ses dalgasının geri dönmesi için geçen süre ölçülüyor. */
-  distanceL = timeL /2/ 29.1;  /* Öngörülen oda sıcaklığı için (20C) gerekli değer 29.1 dir. */
+  timeL = pulseIn(echoPin, HIGH, 11600);     /* The time it takes for the sound wave to return is measured. */
+  distanceL = timeL /2/ 29.1;                /* For the predicted room temperature (20C) the required value is 29.1. */
   
   return distanceL;
   }
@@ -45,12 +45,12 @@
  long distanceF;
   digitalWrite(trigPinFront, LOW); /*Sensör set the LOW state. */
   delayMicroseconds(5);
-  digitalWrite(trigPinFront, HIGH); /*Sensöre ses dalgasını üretmesi için emir veriyoruz. */
+  digitalWrite(trigPinFront, HIGH); 
   delayMicroseconds(10);
-  digitalWrite(trigPinFront, LOW); /*yeni dalgaların üretilmemesi için trig pini LOW yapılıyor. */
+  digitalWrite(trigPinFront, LOW); 
   
-  timeF = pulseIn(echoPin, HIGH, 11600); /* Ses dalgasının geri dönmesi için geçen süre ölçülüyor. */
-  distanceF = timeF /2/ 29.1;  /* Öngörülen oda sıcaklığı için (20C) gerekli değer 29.1 dir. */
+  timeF = pulseIn(echoPin, HIGH, 11600); 
+  distanceF = timeF /2/ 29.1;  
   
   return distanceF;
   }
@@ -58,23 +58,24 @@ long DistanceCalculateR()      /* Calculating distance of Right */
   {
   long timeR;
   long distanceR;
-  digitalWrite(trigPinRight, LOW); /*Sensör set the LOW state. */
+  digitalWrite(trigPinRight, LOW);
   delayMicroseconds(5);
-  digitalWrite(trigPinRight, HIGH); /*Sensöre ses dalgasını üretmesi için emir veriyoruz. */
+  digitalWrite(trigPinRight, HIGH); 
   delayMicroseconds(10);
-  digitalWrite(trigPinRight, LOW); /*yeni dalgaların üretilmemesi için trig pini LOW yapılıyor. */
+  digitalWrite(trigPinRight, LOW); 
   
-  timeR = pulseIn(echoPin, HIGH, 11600); /* Ses dalgasının geri dönmesi için geçen süre ölçülüyor. */
-  distanceR = timeR /2/ 29.1;  /* Öngörülen oda sıcaklığı için (20C) gerekli değer 29.1 dir. */
-  
+  timeR = pulseIn(echoPin, HIGH, 11600);
+  distanceR = timeR /2/ 29.1;  
   return distanceR;
   
   }
-    void forward(int speed){       
-   /* motorlarımızın hızı 0-255 arasında olmalıdır.
-   * Fakat bazı motorların torkunun yetersizliğiniden 60-255 arasında çalışmaktadır.
-   * Eğer motordan tiz bir ses çıkıyorsa hızını arttırmamız gerekmektedir.
+    void forward(int speed){  
+    
+   /* The speed of our motors should be between 0-255.
+   * But some engines are running between 60-255 when the torque is insufficient.
+   * If the motord is a high-pitched sound, we need to increase the speed.
    */  
+   
   analogWrite(rightenable, speed);       /* Speed data of right engine. */
   digitalWrite(rightback,HIGH);           /* Turn forward */
   
@@ -129,7 +130,7 @@ void setup(){
 }
 void loop(){
   
-//  while(DistanceCalculateF() > 10 ){ // önüne engel gelene kadar düz git
+//  while(DistanceCalculateF() > 10 ){   // Go straight to the unobstructed
 //    forward(TurnSpeed);
 //  }
 //  
