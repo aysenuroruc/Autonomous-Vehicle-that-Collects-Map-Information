@@ -1,0 +1,164 @@
+ /* Otonom olarak bir odanın krokisini çıkaran Ardıno Kodu */
+
+  const int trigPinFront = 7;   /*1.Sensörün trig pini Arduino'nun 6 numaralı bacağına bağlanılacak. */
+  const int echoPinFront = 8;   /*1.Sensörün echo pini Arduinonun 7 numaralı bacağına bağlanır.      */
+
+  const int trigPinRight = 10;
+  const int echoPinRight = 11;
+
+  const int trigPinLeft = 2;
+  const int echoPinLeft = 4;
+  
+  int echoPin;
+  int TurnSpeed = 150;     /* Bu değişken ile motorların dönme hızı kontrol edilebilir.*/
+  
+  int TurnTime = 250;  /*DonmeZamani değişkeni robotun 90 Derece dönmesini sağlayan değişkendir.Robotun yaklaşık 90 derece dönmesi için yaklaşık olarak böyle bir süre tayin ettik. */
+
+  const int rightback = 5;
+  const int rightforward = 3;
+  
+  const int leftback= 9;
+  const int leftforward = 6;
+  
+  const int leftenable = 13;
+  
+  const int rightenable= 12;
+  
+  long DistanceCalculateL()     /* Calculating distance of Left   */
+  {
+  long timeL;
+  long distanceL;
+  digitalWrite(trigPinLeft, LOW); /*Sensör set the LOW state. */
+  delayMicroseconds(5);
+  digitalWrite(trigPinLeft, HIGH); /*Sensöre ses dalgasını üretmesi için emir veriyoruz. */
+  delayMicroseconds(10);
+  digitalWrite(trigPinLeft, LOW); /*yeni dalgaların üretilmemesi için trig pini LOW yapılıyor. */
+  
+  timeL = pulseIn(echoPin, HIGH, 11600); /* Ses dalgasının geri dönmesi için geçen süre ölçülüyor. */
+  distanceL = timeL /2/ 29.1;  /* Öngörülen oda sıcaklığı için (20C) gerekli değer 29.1 dir. */
+  
+  return distanceL;
+  }
+    long DistanceCalculateF()     /* Calculating distance of Medium */
+  {
+  long timeF;
+ long distanceF;
+  digitalWrite(trigPinFront, LOW); /*Sensör set the LOW state. */
+  delayMicroseconds(5);
+  digitalWrite(trigPinFront, HIGH); /*Sensöre ses dalgasını üretmesi için emir veriyoruz. */
+  delayMicroseconds(10);
+  digitalWrite(trigPinFront, LOW); /*yeni dalgaların üretilmemesi için trig pini LOW yapılıyor. */
+  
+  timeF = pulseIn(echoPin, HIGH, 11600); /* Ses dalgasının geri dönmesi için geçen süre ölçülüyor. */
+  distanceF = timeF /2/ 29.1;  /* Öngörülen oda sıcaklığı için (20C) gerekli değer 29.1 dir. */
+  
+  return distanceF;
+  }
+long DistanceCalculateR()      /* Calculating distance of Right */
+  {
+  long timeR;
+  long distanceR;
+  digitalWrite(trigPinRight, LOW); /*Sensör set the LOW state. */
+  delayMicroseconds(5);
+  digitalWrite(trigPinRight, HIGH); /*Sensöre ses dalgasını üretmesi için emir veriyoruz. */
+  delayMicroseconds(10);
+  digitalWrite(trigPinRight, LOW); /*yeni dalgaların üretilmemesi için trig pini LOW yapılıyor. */
+  
+  timeR = pulseIn(echoPin, HIGH, 11600); /* Ses dalgasının geri dönmesi için geçen süre ölçülüyor. */
+  distanceR = timeR /2/ 29.1;  /* Öngörülen oda sıcaklığı için (20C) gerekli değer 29.1 dir. */
+  
+  return distanceR;
+  
+  }
+    void forward(int speed){       
+   /* motorlarımızın hızı 0-255 arasında olmalıdır.
+   * Fakat bazı motorların torkunun yetersizliğiniden 60-255 arasında çalışmaktadır.
+   * Eğer motordan tiz bir ses çıkıyorsa hızını arttırmamız gerekmektedir.
+   */  
+  analogWrite(rightenable, speed);       /* Speed data of right engine. */
+  digitalWrite(rightback,HIGH);           /* Turn forward */
+  
+  
+  analogWrite(leftenable, speed); 
+  digitalWrite(leftback,HIGH);
+  
+  }
+   void turnRight(int speed){
+     
+   analogWrite(rightenable, speed);
+   digitalWrite(rightback,LOW);
+   
+   analogWrite(leftenable,speed);
+   digitalWrite(leftback,HIGH);
+ }
+  void turnLeft(int speed){
+    
+  analogWrite(rightenable,speed);
+  digitalWrite(rightback,HIGH);
+  
+  analogWrite(leftenable,speed);
+  digitalWrite(leftback,LOW);
+}
+
+  void stop()
+ {
+  /* Tüm motorlar kitlenerek durma sağlanıyor */
+  digitalWrite(rightforward, HIGH);
+  digitalWrite(rightback, HIGH);
+  digitalWrite(leftforward, HIGH);
+  digitalWrite(leftback, HIGH);
+ }
+void setup(){
+  
+  Serial.begin(9600);                 /*Open the serial port for Bluetooth , 9600 bps data speed. */
+  
+  pinMode(trigPinLeft ,OUTPUT);            /* Set output cause of audio wave propagation from sensor. */
+  pinMode(echoPinLeft,INPUT);             /* Set input cause of audio wave come to sensor. */
+
+  pinMode(trigPinFront ,OUTPUT);            /* Set output cause of audio wave propagation from sensor. */
+  pinMode(echoPinFront,INPUT);             /* Set input cause of audio wave come to sensor. */
+
+  pinMode(trigPinRight ,OUTPUT);            /* Set output cause of audio wave propagation from sensor. */
+  pinMode(echoPinRight,INPUT);             /* Set input cause of audio wave come to sensor. */
+  
+  pinMode(rightback,OUTPUT);
+  pinMode(leftback,OUTPUT);
+
+  pinMode(leftenable,OUTPUT);
+  pinMode(rightenable,OUTPUT);  
+}
+void loop(){
+  
+//  while(DistanceCalculateF() > 10 ){ // önüne engel gelene kadar düz git
+//    forward(TurnSpeed);
+//  }
+//  
+//  turnLeft(TurnSpeed);
+//}
+
+  
+if(DistanceCalculateL() < 12) {
+  if(DistanceCalculateF()< 12){
+     turnRight(TurnSpeed);  
+        delay(500);
+          
+          forward(TurnSpeed); 
+  }
+      else {
+       forward(TurnSpeed);
+     }
+}
+else if( DistanceCalculateR() < 12){
+  
+  if( DistanceCalculateF()<12){
+     turnLeft(TurnSpeed);                                                                    
+     delay(500);                                                                              
+     forward(TurnSpeed);
+  }
+  else {
+    forward(TurnSpeed);
+  }
+}
+  }
+  
+
