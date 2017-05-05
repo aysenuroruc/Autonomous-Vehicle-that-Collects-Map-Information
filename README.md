@@ -1,1 +1,1 @@
-# Autonomous-Vehicle-that-Collects-Map-Information
+# Autonomous Vehicle that Collects Map Information
